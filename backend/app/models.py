@@ -12,6 +12,7 @@ class Spot(Base):
     name = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
+    facing_direction = Column(Float, nullable=True)
 
     marine_grid_lat = Column(Float, nullable=True)
     marine_grid_lon = Column(Float, nullable=True)

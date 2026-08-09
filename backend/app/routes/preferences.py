@@ -13,6 +13,15 @@ def create_preference(spot_id: int, pref: schemas.PreferenceCreate, db: Session 
     if not spot:
         raise HTTPException(status_code=404, detail="Spot not found")
 
+    existing = db.query(models.Preference).filter(models.Preference.spot_id == spot_id).first()
+
+    if existing:
+        for field, value in pref.model_dump().items():
+            setattr(existing, field, value)
+        db.commit()
+        db.refresh(existing)
+        return existing
+
     db_pref = models.Preference(**pref.model_dump(), spot_id=spot_id)
     db.add(db_pref)
     db.commit()

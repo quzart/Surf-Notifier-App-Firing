@@ -27,6 +27,7 @@ class SpotBase(BaseModel):
     name: str
     latitude: float
     longitude: float
+    facing_direction: Optional[float] = None
 
 
 class SpotCreate(SpotBase):
