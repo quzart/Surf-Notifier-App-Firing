@@ -5,10 +5,21 @@ from sqlalchemy.sql import func
 from app.database import Base
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, nullable=False, index=True)
+    hashed_password = Column(String, nullable=False)
+
+    spots = relationship("Spot", back_populates="owner", cascade="all, delete-orphan")
+
+
 class Spot(Base):
     __tablename__ = "spots"
 
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     name = Column(String, nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
@@ -18,6 +29,7 @@ class Spot(Base):
     marine_grid_lon = Column(Float, nullable=True)
     tide_station_id = Column(String, nullable=True)
 
+    owner = relationship("User", back_populates="spots")
     preferences = relationship(
         "Preference", back_populates="spot", cascade="all, delete-orphan"
     )

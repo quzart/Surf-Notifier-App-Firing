@@ -3,15 +3,30 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app import models, schemas
+from app.auth import get_current_user
 
 router = APIRouter(prefix="/spots/{spot_id}/preferences", tags=["preferences"])
 
 
-@router.post("/", response_model=schemas.PreferenceOut)
-def create_preference(spot_id: int, pref: schemas.PreferenceCreate, db: Session = Depends(get_db)):
-    spot = db.query(models.Spot).filter(models.Spot.id == spot_id).first()
+def get_owned_spot(spot_id: int, db: Session, current_user: models.User):
+    spot = (
+        db.query(models.Spot)
+        .filter(models.Spot.id == spot_id, models.Spot.user_id == current_user.id)
+        .first()
+    )
     if not spot:
         raise HTTPException(status_code=404, detail="Spot not found")
+    return spot
+
+
+@router.post("/", response_model=schemas.PreferenceOut)
+def create_preference(
+    spot_id: int,
+    pref: schemas.PreferenceCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    get_owned_spot(spot_id, db, current_user)
 
     existing = db.query(models.Preference).filter(models.Preference.spot_id == spot_id).first()
 
@@ -30,12 +45,25 @@ def create_preference(spot_id: int, pref: schemas.PreferenceCreate, db: Session 
 
 
 @router.get("/", response_model=list[schemas.PreferenceOut])
-def list_preferences(spot_id: int, db: Session = Depends(get_db)):
+def list_preferences(
+    spot_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    get_owned_spot(spot_id, db, current_user)
     return db.query(models.Preference).filter(models.Preference.spot_id == spot_id).all()
 
 
 @router.put("/{preference_id}", response_model=schemas.PreferenceOut)
-def update_preference(spot_id: int, preference_id: int, updated: schemas.PreferenceCreate, db: Session = Depends(get_db)):
+def update_preference(
+    spot_id: int,
+    preference_id: int,
+    updated: schemas.PreferenceCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    get_owned_spot(spot_id, db, current_user)
+
     pref = (
         db.query(models.Preference)
         .filter(models.Preference.id == preference_id, models.Preference.spot_id == spot_id)
@@ -52,7 +80,14 @@ def update_preference(spot_id: int, preference_id: int, updated: schemas.Prefere
 
 
 @router.delete("/{preference_id}")
-def delete_preference(spot_id: int, preference_id: int, db: Session = Depends(get_db)):
+def delete_preference(
+    spot_id: int,
+    preference_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    get_owned_spot(spot_id, db, current_user)
+
     pref = (
         db.query(models.Preference)
         .filter(models.Preference.id == preference_id, models.Preference.spot_id == spot_id)

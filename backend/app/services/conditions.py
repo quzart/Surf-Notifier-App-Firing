@@ -22,6 +22,7 @@ async def get_wind_conditions(latitude: float, longitude: float):
         "latitude": latitude,
         "longitude": longitude,
         "hourly": "wind_speed_10m,wind_direction_10m",
+        "wind_speed_unit": "kn",
         "timezone": "auto",
     }
     async with httpx.AsyncClient() as client:

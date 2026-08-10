@@ -313,3 +313,21 @@
   font-size: 0.9rem;
   font-style: italic;
 }
+
+.theme-toggle {
+  position: absolute;
+  top: 2rem;
+  right: 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

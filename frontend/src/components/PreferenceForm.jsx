@@ -9,9 +9,9 @@ const PERIOD_OPTIONS = [
 
 const WIND_SPEED_OPTIONS = [
   { label: "Any wind", wind_speed_max: null },
-  { label: "Calm (<10 mph)", wind_speed_max: 10 },
-  { label: "Light (<15 mph)", wind_speed_max: 15 },
-  { label: "Moderate (<20 mph)", wind_speed_max: 20 },
+  { label: "Calm (<8 kn)", wind_speed_max: 8 },
+  { label: "Light (<13 kn)", wind_speed_max: 13 },
+  { label: "Moderate (<18 kn)", wind_speed_max: 18 },
 ];
 
 const TIDE_OPTIONS = [

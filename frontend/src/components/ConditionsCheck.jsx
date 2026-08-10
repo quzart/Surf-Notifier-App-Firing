@@ -41,7 +41,7 @@ function ConditionsCheck({ spotId }) {
           <div className="condition-row">
             <span className="condition-label">Wind</span>
             <span>
-              {result.conditions.wind_speed} mph @ {result.conditions.wind_direction}° —{" "}
+              {result.conditions.wind_speed} kn @ {result.conditions.wind_direction}° —{" "}
               {result.conditions.wind_description}
             </span>
           </div>

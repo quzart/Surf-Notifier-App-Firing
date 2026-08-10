@@ -3,14 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
-from app.database import Base, engine
+from app.database import engine
 from app import models
-from app.routes import spots, preferences
+from app.routes import spots, preferences, auth, push
 from app.services.scheduler import start_scheduler, stop_scheduler
 
 load_dotenv()
-
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Surf Notifier API")
 
@@ -22,8 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
 app.include_router(spots.router)
 app.include_router(preferences.router)
+app.include_router(push.router)
 
 
 @app.on_event("startup")

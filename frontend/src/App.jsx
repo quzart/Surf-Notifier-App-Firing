@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { getSpots } from "./api";
+import { getSpots, isLoggedIn, logout } from "./api";
+import AuthForm from "./components/AuthForm";
 import SpotForm from "./components/SpotForm";
 import SpotList from "./components/SpotList";
+import PushSettings from "./components/PushSettings";
 import "./index.css";
 import "./App.css";
 
@@ -24,14 +26,23 @@ function WaveDivider() {
 }
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(isLoggedIn());
   const [spots, setSpots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("theme") || "light"
+  );
 
   useEffect(() => {
-    loadSpots();
-  }, []);
+    if (authenticated) loadSpots();
+  }, [authenticated]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   async function loadSpots() {
     try {
@@ -51,8 +62,38 @@ function App() {
     loadSpots();
   }
 
+  function toggleTheme() {
+    setTheme(theme === "light" ? "dark" : "light");
+  }
+
+  function handleLogout() {
+    logout();
+    setAuthenticated(false);
+    setSpots([]);
+  }
+
+  if (!authenticated) {
+    return (
+      <div className="app" style={{ position: "relative" }}>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+        </button>
+        <header className="app-header">
+          <h1>Surf Notifier</h1>
+          <p>Your spots, your conditions, checked on demand.</p>
+        </header>
+        <WaveDivider />
+        <AuthForm onAuthenticated={() => setAuthenticated(true)} />
+      </div>
+    );
+  }
+
   return (
-    <div className="app">
+    <div className="app" style={{ position: "relative" }}>
+      <button className="theme-toggle" onClick={toggleTheme}>
+        {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+      </button>
+
       <header className="app-header">
         <h1>Surf Notifier</h1>
         <p>Your spots, your conditions, checked on demand.</p>
@@ -60,12 +101,19 @@ function App() {
 
       <WaveDivider />
 
-      <button
-        className="toggle-add-button"
-        onClick={() => setShowAddForm(!showAddForm)}
-      >
-        {showAddForm ? "Cancel" : "+ Add a spot"}
-      </button>
+      <PushSettings />
+
+      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginTop: "1rem" }}>
+        <button
+          className="toggle-add-button"
+          onClick={() => setShowAddForm(!showAddForm)}
+        >
+          {showAddForm ? "Cancel" : "+ Add a spot"}
+        </button>
+        <button className="text-button" onClick={handleLogout}>
+          Log out
+        </button>
+      </div>
 
       {showAddForm && <SpotForm onSpotCreated={handleSpotCreated} />}
 

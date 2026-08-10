@@ -4,3 +4,10 @@ sqlalchemy
 httpx
 python-dotenv
 apscheduler
+passlib[bcrypt]
+python-jose[cryptography]
+python-multipart
+bcrypt==4.0.1
+alembic
+pywebpush
+py-vapid
