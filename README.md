@@ -1,10 +1,10 @@
 # Surf Notifier App (Firing)
 
-A personal surf conditions app: add your favorite (or secret) surf spots, set the wave, wind, and tide conditions you actually want, and get notified on your phone when a spot is worth checking — powered entirely by free public data sources.
+A personal surf conditions app: add your favorite surf spots, set the wave, wind, and tide conditions you actually want, and get notified on your phone when a spot is worth checking. Powered entirely by free public data sources.
 
 ## Why this exists
 
-Commercial surf forecast apps are either paid or don't cover lesser-known/secret spots well. This project uses free public ocean data (Open-Meteo, NOAA) combined with a strict, spot-specific matching system — including offshore/onshore wind calculated relative to each spot's actual coastline orientation — to tell you when *your* spot is worth the drive.
+Commercial surf forecast apps are either paid or don't cover lesser known/secret spots well. This project uses free public ocean data (Open-Meteo, NOAA) combined with a strict, spot specific matching system including offshore/onshore wind calculated relative to each spot's actual coastline orientation to tell you when your spot is worth the drive.
 
 ## Features
 
